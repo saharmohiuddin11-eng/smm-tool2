@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMM Command Center Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070d;--s1:#0d0d18;--s2:#13131f;--s3:#191928;--border:#1f1f32;--border2:#28283e;--v:#7c3aed;--v2:#a855f7;--v3:#c084fc;--pk:#ec4899;--cy:#06b6d4;--gn:#10b981;--am:#f59e0b;--or:#f97316;--rd:#ef4444;--bl:#3b82f6;--yt:#ff0000;--li:#0a66c2;--text:#f0f0fa;--muted:#44445a;--muted2:#7878a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.bg-mesh{position:fixed;inset:0;background:radial-gradient(ellipse at 15% 50%,rgba(124,58,237,.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 15%,rgba(236,72,153,.05) 0%,transparent 50%),radial-gradient(ellipse at 55% 85%,rgba(6,182,212,.04) 0%,transparent 50%);pointer-events:none;}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:44px 44px;opacity:.25;pointer-events:none;}
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:16px 18px;}
+header{display:flex;justify-content:space-between;align-items:center;padding:13px 20px;background:var(--s1);border:1px solid var(--border2);border-radius:14px;margin-bottom:13px;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--v),var(--pk));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.logo-text{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;background:linear-gradient(135deg,var(--v2),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-sub{font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace;}
+.active-client-badge{padding:6px 13px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);border-radius:20px;font-size:12px;color:var(--v3);font-weight:500;cursor:pointer;}
+.tabs{display:flex;gap:2px;background:var(--s1);border:1px solid var(--border2);border-radius:11px;padding:4px;margin-bottom:13px;overflow-x:auto;}
+.tab{flex:1;min-width:fit-content;padding:8px 10px;border:none;border-radius:7px;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.tab.active{color:#fff;}
+.tab.tc.active{background:linear-gradient(135deg,var(--v),var(--pk));}
+.tab.to.active{background:linear-gradient(135deg,var(--cy),#0891b2);}
+.tab.te.active{background:linear-gradient(135deg,var(--gn),#059669);}
+.tab.tp.active{background:linear-gradient(135deg,var(--am),var(--or));}
+.tab.th.active{background:linear-gradient(135deg,var(--pk),#be185d);}
+.tab.tk.active{background:linear-gradient(135deg,var(--bl),#2563eb);}
+.tab.tyt.active{background:linear-gradient(135deg,var(--yt),#cc0000);}
+.tab.tcl.active{background:linear-gradient(135deg,#6366f1,#4f46e5);}
+.tab:hover:not(.active){color:var(--text);background:var(--s2);}
+.panel{display:none;animation:fi .25s ease;}
+.panel.active{display:block;}
+.card{background:var(--s1);border:1px solid var(--border2);border-radius:12px;padding:17px;margin-bottom:11px;}
+.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:13px;display:flex;align-items:center;gap:7px;}
+.tag{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.tag-v{background:rgba(124,58,237,.18);color:var(--v3);border:1px solid rgba(124,58,237,.28);}
+.tag-cy{background:rgba(6,182,212,.12);color:var(--cy);border:1px solid rgba(6,182,212,.22);}
+.tag-gn{background:rgba(16,185,129,.12);color:var(--gn);border:1px solid rgba(16,185,129,.22);}
+.tag-am{background:rgba(245,158,11,.12);color:var(--am);border:1px solid rgba(245,158,11,.22);}
+.tag-pk{background:rgba(236,72,153,.12);color:var(--pk);border:1px solid rgba(236,72,153,.22);}
+.tag-bl{background:rgba(59,130,246,.12);color:var(--bl);border:1px solid rgba(59,130,246,.22);}
+.tag-yt{background:rgba(255,0,0,.12);color:#ff4444;border:1px solid rgba(255,0,0,.22);}
+.tag-li{background:rgba(10,102,194,.15);color:#60a5fa;border:1px solid rgba(10,102,194,.25);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.f{display:flex;flex-direction:column;gap:4px;}
+.f.full{grid-column:1/-1;}
+label{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1.2px;font-family:'Fira Code',monospace;}
+input,select,textarea{background:var(--s2);border:1px solid var(--border2);border-radius:7px;padding:8px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;transition:border-color .18s;outline:none;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--v);}
+textarea{resize:vertical;min-height:75px;}
+select option{background:var(--s2);}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:5px;}
+.bv{background:linear-gradient(135deg,var(--v),var(--pk));color:#fff;}
+.bv:hover{opacity:.88;transform:translateY(-1px);}
+.bc{background:linear-gradient(135deg,var(--cy),#0891b2);color:#fff;}
+.bc:hover{opacity:.88;transform:translateY(-1px);}
+.bg2{background:linear-gradient(135deg,var(--gn),#059669);color:#fff;}
+.bg2:hover{opacity:.88;transform:translateY(-1px);}
+.ba{background:linear-gradient(135deg,var(--am),var(--or));color:#fff;}
+.ba:hover{opacity:.88;transform:translateY(-1px);}
+.bb{background:linear-gradient(135deg,var(--bl),#2563eb);color:#fff;}
+.bb:hover{opacity:.88;transform:translateY(-1px);}
+.bpk{background:linear-gradient(135deg,var(--pk),#be185d);color:#fff;}
+.bpk:hover{opacity:.88;transform:translateY(-1px);}
+.byt{background:linear-gradient(135deg,var(--yt),#cc0000);color:#fff;}
+.byt:hover{opacity:.88;transform:translateY(-1px);}
+.bli{background:linear-gradient(135deg,var(--li),#084e94);color:#fff;}
+.bli:hover{opacity:.88;transform:translateY(-1px);}
+.bgh{background:var(--s2);color:var(--text);border:1px solid var(--border2);}
+.bgh:hover{border-color:var(--v);color:var(--v2);}
+.bsm{padding:5px 10px;font-size:11px;border-radius:6px;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px;}
+.vp{padding:6px 13px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:11px;cursor:pointer;transition:all .18s;font-weight:500;}
+.vp.on{border-color:var(--v);color:var(--v3);background:rgba(124,58,237,.1);}
+.voice-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cal-month-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+.cal-day-names{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px;}
+.cal-dn{text-align:center;font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace;text-transform:uppercase;letter-spacing:1px;padding:4px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.cal-cell{background:var(--s2);border:1px solid var(--border2);border-radius:9px;padding:7px;min-height:100px;cursor:pointer;}
+.cal-cell.has-post{border-color:rgba(124,58,237,.25);}
+.cal-cell.today{border-color:rgba(124,58,237,.5);}
+.cal-cell.empty{opacity:.2;pointer-events:none;}
+.cal-date{font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace;margin-bottom:4px;}
+.post-chip{border-radius:5px;padding:3px 6px;font-size:9px;margin-bottom:3px;cursor:pointer;line-height:1.4;display:block;}
+.post-chip:hover{opacity:.75;}
+.pc-edu{background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.28);color:var(--cy);}
+.pc-sale{background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.28);color:var(--am);}
+.pc-story{background:rgba(124,58,237,.13);border:1px solid rgba(124,58,237,.28);color:var(--v3);}
+.pc-relate{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:var(--gn);}
+.pc-trend{background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.25);color:var(--pk);}
+.pc-bts{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25);color:var(--or);}
+.pc-cont{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);color:var(--rd);}
+.pc-trans{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.22);color:#fbbf24;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted2);}
+.leg-dot{width:8px;height:8px;border-radius:3px;}
+.ai-out{background:var(--s2);border:1px solid var(--border2);border-radius:9px;padding:14px;font-size:13px;line-height:1.8;min-height:80px;white-space:pre-wrap;color:var(--text);margin-top:10px;}
+.typing::after{content:'|';color:var(--v);animation:blink .7s infinite;}
+.out-section{background:var(--s2);border:1px solid var(--border2);border-radius:9px;padding:14px;margin-bottom:9px;}
+.out-section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;text-transform:uppercase;letter-spacing:.5px;}
+.out-content{font-size:13px;line-height:1.8;color:var(--text);white-space:pre-wrap;}
+.ht{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;font-family:'Fira Code',monospace;cursor:pointer;transition:all .15s;margin:2px;}
+.ht:hover{opacity:.75;}
+.ht-explore{background:rgba(124,58,237,.15);color:var(--v3);border:1px solid rgba(124,58,237,.25);}
+.ht-feed{background:rgba(6,182,212,.12);color:var(--cy);border:1px solid rgba(6,182,212,.22);}
+.ht-home{background:rgba(16,185,129,.1);color:var(--gn);border:1px solid rgba(16,185,129,.2);}
+.ht-reel{background:rgba(236,72,153,.1);color:var(--pk);border:1px solid rgba(236,72,153,.2);}
+.ht-size{font-size:9px;opacity:.6;margin-left:2px;}
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;}
+.client-card{background:var(--s2);border:1px solid var(--border2);border-radius:11px;padding:14px;cursor:pointer;transition:all .18s;}
+.client-card:hover,.client-card.active-c{border-color:var(--v);transform:translateY(-2px);}
+.client-card.active-c{background:linear-gradient(135deg,var(--s2),rgba(124,58,237,.06));}
+.client-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px;}
+.client-meta{font-size:11px;color:var(--muted2);line-height:1.7;}
+.client-voice{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-top:6px;background:rgba(124,58,237,.15);color:var(--v3);border:1px solid rgba(124,58,237,.25);}
+.ad-ptabs{display:flex;gap:4px;margin-bottom:13px;flex-wrap:wrap;}
+.ad-ptab{padding:8px 16px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;}
+.ad-ptab.on{background:linear-gradient(135deg,var(--am),var(--or));color:#fff;border-color:transparent;}
+.kw-ptabs{display:flex;gap:4px;margin-bottom:13px;flex-wrap:wrap;}
+.kw-ptab{padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;}
+.kw-ptab.on{color:#fff;border-color:transparent;}
+.kw-ptab.ig.on{background:linear-gradient(135deg,#e1306c,#833ab4);}
+.kw-ptab.fb.on{background:linear-gradient(135deg,#1877f2,#0d5dbf);}
+.kw-ptab.li.on{background:linear-gradient(135deg,var(--li),#084e94);}
+.kw-ptab.yt.on{background:linear-gradient(135deg,var(--yt),#cc0000);}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:14px;padding:22px;width:90%;max-width:680px;margin:auto;}
+.modal-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:14px;}
+.copy-btn{font-size:10px;padding:3px 8px;border-radius:5px;border:none;background:var(--s3);color:var(--muted2);cursor:pointer;font-family:'Fira Code',monospace;transition:all .15s;}
+.copy-btn:hover{color:var(--text);}
+.info-box{background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.15);border-radius:9px;padding:11px 13px;font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:11px;}
+.info-box.yt-info{background:rgba(255,0,0,.04);border-color:rgba(255,0,0,.15);}
+.empty-state{text-align:center;color:var(--muted);padding:22px;font-size:12px;font-family:'Fira Code',monospace;}
+.surface-box{border-radius:10px;padding:14px;}
+.yt-metric{background:var(--s2);border:1px solid var(--border2);border-radius:9px;padding:13px;text-align:center;}
+.yt-metric-n{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--yt);}
+.yt-metric-l{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.yt-section-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;}
+.yt-stab{padding:7px 13px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;}
+.yt-stab.on{background:linear-gradient(135deg,var(--yt),#cc0000);color:#fff;border-color:transparent;}
+.toast{position:fixed;bottom:16px;right:16px;padding:10px 18px;border-radius:8px;font-weight:600;font-size:13px;transform:translateY(60px);opacity:0;transition:all .28s;z-index:999;}
+.toast.show{transform:translateY(0);opacity:1;}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@media(max-width:750px){.fg{grid-template-columns:1fr;}.fg3{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div><div class="bg-grid"></div>
+<div class="wrap">
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">✦</div>
+    <div>
+      <div class="logo-text">SMM Command Center Pro</div>
+      <div class="logo-sub">AI-Powered Social Media Management Suite</div>
+    </div>
+  </div>
+  <div class="active-client-badge" id="active-badge" onclick="showTab('clients',document.querySelectorAll('.tab')[7])">👤 No Client Selected</div>
+</header>
+
+<div class="tabs">
+  <button class="tab tc active" onclick="showTab('calendar',this)">📅 Calendar</button>
+  <button class="tab to" onclick="showTab('organic',this)">🚀 Organic Reach</button>
+  <button class="tab te" onclick="showTab('engagement',this)">💬 Engagement</button>
+  <button class="tab tp" onclick="showTab('paid',this)">💰 Paid Ads</button>
+  <button class="tab th" onclick="showTab('hashtags',this)">🏷 Hashtags</button>
+  <button class="tab tk" onclick="showTab('keywords',this)">🔍 SEO & Keywords</button>
+  <button class="tab tyt" onclick="showTab('youtube',this)">▶ YouTube Growth</button>
+  <button class="tab tcl" onclick="showTab('clients',this)">👥 Clients</button>
+</div>
+
+<!-- ═══════ CALENDAR ═══════ -->
+<div class="panel active" id="tab-calendar">
+  <div class="card">
+    <div class="card-title">⚙️ Calendar Setup <span class="tag tag-v">AI Generated</span></div>
+    <div class="fg">
+      <div class="f"><label>Month</label><select id="cal-month"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
+      <div class="f"><label>Year</label><input type="number" id="cal-year" value="2025"></div>
+      <div class="f"><label>Posts Per Week</label><select id="cal-freq"><option value="3">3x / week</option><option value="4">4x / week</option><option value="5">5x / week</option><option value="7">Daily</option><option value="2">2x / week</option></select></div>
+      <div class="f"><label>Platform</label><select id="cal-platform"><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>Facebook</option><option>YouTube</option><option>Twitter/X</option><option>Multi-Platform</option></select></div>
+      <div class="f"><label>Industry</label><select id="cal-industry" onchange="toggleCustomNiche('cal')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Nutrition & Dietetics</option><option>Wellness & Holistic Health</option><option>Pharmacy & Supplements</option><option>Personal Brand</option><option>Agency / B2B</option><option>Automotive</option><option>Luxury Goods</option><option>Custom Niche ↓</option></select></div>
+      <div class="f"><label>Target ICP</label><input type="text" id="cal-icp" placeholder="e.g. Women 25-40, entrepreneurs, UAE-based"></div>
+      <div class="f full" id="cal-custom-niche-wrap" style="display:none;"><label>Custom Niche (describe your niche)</label><input type="text" id="cal-custom-niche" placeholder="e.g. Sustainable baby products for eco-conscious millennial parents"></div>
+      <div class="f full"><label>Brand Voice</label>
+        <div class="voice-grid" id="cal-vg">
+          <button class="vp on" onclick="selectVG(this,'cal-vg','Bold & Edgy')">Bold & Edgy</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Warm & Friendly')">Warm & Friendly</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Professional & Authoritative')">Professional</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Playful & Fun')">Playful & Fun</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Luxury & Aspirational')">Luxury & Aspirational</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Raw & Honest')">Raw & Honest</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Motivational & Inspiring')">Motivational</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Educational & Expert')">Educational</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Empathetic & Caring')">Empathetic & Caring</button>
+          <button class="vp" onclick="selectVG(this,'cal-vg','Clinical & Trustworthy')">Clinical & Trustworthy</button>
+        </div>
+        <input type="hidden" id="cal-voice" value="Bold & Edgy">
+      </div>
+      <div class="f full"><label>Custom Brand Voice (optional)</label><textarea id="cal-custom-voice" placeholder="e.g. We talk like a best friend who happens to be an expert. Direct, no fluff, never corporate. Make the reader feel seen — like we're talking TO them not AT them."></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn bv" id="cal-btn" onclick="generateCalendar()">✦ Generate Full Month</button>
+      <button class="btn bgh" onclick="clearCalendar()">🗑 Clear</button>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--cy)"></div>Educational (20%)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--am)"></div>Sales/Promo (20%)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--v3)"></div>Story/Narrative</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--gn)"></div>Relatable/Pain Point</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--pk)"></div>Trending/Reactive</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--or)"></div>Behind the Scenes</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--rd)"></div>Controversial/Opinion</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#fbbf24"></div>Transformation</div>
+  </div>
+  <div class="card" style="padding:13px;">
+    <div class="cal-nav">
+      <button class="btn bgh bsm" onclick="changeMonth(-1)">← Prev</button>
+      <div class="cal-month-title" id="cal-title">Month Year</div>
+      <button class="btn bgh bsm" onclick="changeMonth(1)">Next →</button>
+    </div>
+    <div class="cal-day-names"><div class="cal-dn">Sun</div><div class="cal-dn">Mon</div><div class="cal-dn">Tue</div><div class="cal-dn">Wed</div><div class="cal-dn">Thu</div><div class="cal-dn">Fri</div><div class="cal-dn">Sat</div></div>
+    <div class="cal-grid" id="cal-grid"><div class="empty-state" style="grid-column:1/-1">Set up and click Generate to build your calendar</div></div>
+  </div>
+</div>
+
+<!-- ═══════ ORGANIC REACH ═══════ -->
+<div class="panel" id="tab-organic">
+  <div class="card">
+    <div class="card-title">🚀 Organic Reach Booster <span class="tag tag-cy">AI Strategy</span></div>
+    <div class="fg">
+      <div class="f"><label>Platform</label><select id="org-platform"><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>Facebook</option><option>YouTube Shorts</option><option>Twitter/X</option></select></div>
+      <div class="f"><label>Industry</label><select id="org-industry" onchange="toggleCustomNiche('org')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Nutrition & Dietetics</option><option>Wellness & Holistic Health</option><option>Personal Brand</option><option>Agency / B2B</option><option>Luxury Goods</option><option>Custom Niche ↓</option></select></div>
+      <div class="f" id="org-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="org-custom-niche" placeholder="Describe your niche"></div>
+      <div class="f"><label>Target ICP</label><input type="text" id="org-icp" placeholder="e.g. Millennial women, UAE, fitness enthusiasts"></div>
+      <div class="f"><label>Account Size</label><select id="org-size"><option>Under 1K</option><option>1K–5K</option><option>5K–20K</option><option>20K–100K</option><option>100K+</option></select></div>
+      <div class="f"><label>Brand Voice</label>
+        <div class="voice-grid">
+          <button class="vp on" onclick="selectVG(this,'org-vg','Bold & Edgy')">Bold & Edgy</button>
+          <button class="vp" onclick="selectVG(this,'org-vg','Warm & Friendly')">Warm & Friendly</button>
+          <button class="vp" onclick="selectVG(this,'org-vg','Professional')">Professional</button>
+          <button class="vp" onclick="selectVG(this,'org-vg','Playful')">Playful</button>
+          <button class="vp" onclick="selectVG(this,'org-vg','Empathetic & Caring')">Empathetic</button>
+          <button class="vp" onclick="selectVG(this,'org-vg','Raw & Honest')">Raw & Honest</button>
+        </div>
+        <input type="hidden" id="org-vg" value="Bold & Edgy">
+      </div>
+      <div class="f"><label>Goal</label><select id="org-goal"><option>Grow followers fast</option><option>Increase post reach</option><option>Push to explore page</option><option>Drive profile visits</option><option>Build brand awareness</option><option>Drive appointment bookings</option></select></div>
+    </div>
+    <div class="btn-row"><button class="btn bc" id="org-btn" onclick="generateOrganic()">🚀 Generate Reach Strategy</button></div>
+  </div>
+  <div id="org-output"></div>
+</div>
+
+<!-- ═══════ ENGAGEMENT ═══════ -->
+<div class="panel" id="tab-engagement">
+  <div class="card">
+    <div class="card-title">💬 Engagement Booster <span class="tag tag-gn">AI Powered</span></div>
+    <div class="fg">
+      <div class="f"><label>Platform</label><select id="eng-platform"><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>Facebook</option><option>Twitter/X</option></select></div>
+      <div class="f"><label>Industry</label><select id="eng-industry" onchange="toggleCustomNiche('eng')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Wellness & Holistic Health</option><option>Personal Brand</option><option>Agency / B2B</option><option>Custom Niche ↓</option></select></div>
+      <div class="f" id="eng-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="eng-custom-niche" placeholder="Describe your niche"></div>
+      <div class="f"><label>ICP</label><input type="text" id="eng-icp" placeholder="e.g. Small business owners, 30-50, UK"></div>
+      <div class="f"><label>Brand Voice</label>
+        <div class="voice-grid">
+          <button class="vp on" onclick="selectVG(this,'eng-vg','Bold & Edgy')">Bold & Edgy</button>
+          <button class="vp" onclick="selectVG(this,'eng-vg','Warm & Friendly')">Warm & Friendly</button>
+          <button class="vp" onclick="selectVG(this,'eng-vg','Professional')">Professional</button>
+          <button class="vp" onclick="selectVG(this,'eng-vg','Empathetic & Caring')">Empathetic</button>
+          <button class="vp" onclick="selectVG(this,'eng-vg','Playful')">Playful</button>
+          <button class="vp" onclick="selectVG(this,'eng-vg','Raw & Honest')">Raw & Honest</button>
+        </div>
+        <input type="hidden" id="eng-vg" value="Bold & Edgy">
+      </div>
+      <div class="f"><label>Engagement Type</label><select id="eng-type"><option>All (Comments + Saves + Shares + DMs)</option><option>Comments only</option><option>Saves & Shares</option><option>DMs & Story replies</option><option>Profile visits</option><option>Appointment/Booking clicks</option></select></div>
+      <div class="f"><label>Post Format</label><select id="eng-post-type"><option>Carousel</option><option>Reel / Short video</option><option>Static Image</option><option>Story</option><option>Text Post</option></select></div>
+    </div>
+    <div class="btn-row"><button class="btn bg2" id="eng-btn" onclick="generateEngagement()">💬 Generate Engagement Strategy</button></div>
+  </div>
+  <div id="eng-output"></div>
+</div>
+
+<!-- ═══════ PAID MARKETING ═══════ -->
+<div class="panel" id="tab-paid">
+  <div class="card">
+    <div class="card-title">💰 Paid Marketing Assistant <span class="tag tag-am">Meta · LinkedIn · Google</span></div>
+    <div class="ad-ptabs">
+      <button class="ad-ptab on" onclick="selectAdP(this,'meta')">📘 Meta Ads</button>
+      <button class="ad-ptab" onclick="selectAdP(this,'linkedin')">💼 LinkedIn Ads</button>
+      <button class="ad-ptab" onclick="selectAdP(this,'google')">🔍 Google Ads</button>
+    </div>
+    <input type="hidden" id="paid-platform" value="meta">
+    <div class="fg">
+      <div class="f"><label>Industry</label><select id="paid-industry" onchange="toggleCustomNiche('paid')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Wellness & Holistic Health</option><option>Luxury Goods</option><option>Custom Niche ↓</option></select></div>
+      <div class="f" id="paid-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="paid-custom-niche" placeholder="Describe your niche"></div>
+      <div class="f"><label>Campaign Objective</label><select id="paid-objective"><option>Lead Generation</option><option>Sales / Conversions</option><option>Brand Awareness</option><option>Traffic / Website Visits</option><option>App Installs</option><option>Video Views</option><option>Appointment Bookings</option><option>Engagement</option></select></div>
+      <div class="f"><label>Target ICP</label><input type="text" id="paid-icp" placeholder="e.g. Women 25-45, interested in fitness, US/UK"></div>
+      <div class="f"><label>Monthly Budget (USD)</label><select id="paid-budget"><option>$100–$300</option><option>$300–$500</option><option>$500–$1000</option><option>$1000–$3000</option><option>$3000–$10000</option><option>$10000+</option></select></div>
+      <div class="f"><label>Product / Service</label><input type="text" id="paid-product" placeholder="e.g. Online fitness coaching, $197/mo"></div>
+      <div class="f"><label>USP / Differentiator</label><input type="text" id="paid-usp" placeholder="e.g. Results in 30 days or money back"></div>
+    </div>
+    <div class="btn-row"><button class="btn ba" id="paid-btn" onclick="generatePaid()">💰 Generate Ad Strategy</button></div>
+  </div>
+  <div id="paid-output"></div>
+</div>
+
+<!-- ═══════ HASHTAG ENGINE ═══════ -->
+<div class="panel" id="tab-hashtags">
+  <div class="card">
+    <div class="card-title">🏷 4-Surface Hashtag Engine <span class="tag tag-pk">Explore · Feed · Home · Reels</span></div>
+    <div class="info-box">Every hashtag set covers ALL 4 surfaces simultaneously:<br>🟣 <strong>Explore/Discovery</strong> → non-followers · 🔵 <strong>Feed/Search</strong> → active searchers · 🟢 <strong>Home Feed</strong> → followers + their network · 🩷 <strong>Reels/Trending</strong> → algorithm push to new audiences</div>
+    <div class="fg">
+      <div class="f"><label>Platform</label><select id="ht-platform"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>LinkedIn</option></select></div>
+      <div class="f"><label>Industry</label><select id="ht-industry" onchange="toggleCustomNiche('ht')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Wellness & Holistic Health</option><option>Personal Brand</option><option>Agency / B2B</option><option>Luxury Goods</option><option>Custom Niche ↓</option></select></div>
+      <div class="f" id="ht-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="ht-custom-niche" placeholder="Describe your niche"></div>
+      <div class="f"><label>Post Topic</label><input type="text" id="ht-topic" placeholder="e.g. morning routine for productivity"></div>
+      <div class="f"><label>Target Location</label><input type="text" id="ht-location" placeholder="e.g. UAE, Global, USA, Pakistan"></div>
+      <div class="f"><label>Account Size</label><select id="ht-size"><option>Micro (Under 10K)</option><option>Growing (10K–50K)</option><option>Established (50K–200K)</option><option>Large (200K+)</option></select></div>
+      <div class="f"><label>Post Format</label><select id="ht-format"><option>Reel / Short Video</option><option>Carousel</option><option>Static Image</option><option>Story</option><option>Text/Quote</option></select></div>
+    </div>
+    <div class="btn-row"><button class="btn bpk" id="ht-btn" onclick="generateHashtags()">🏷 Generate 4-Surface Stack</button></div>
+  </div>
+  <div id="ht-output"></div>
+</div>
+
+<!-- ═══════ SEO & KEYWORDS ═══════ -->
+<div class="panel" id="tab-keywords">
+  <div class="card">
+    <div class="card-title">🔍 SEO Caption + Keyword Research <span class="tag tag-bl">All Platforms</span></div>
+    <div class="kw-ptabs">
+      <button class="kw-ptab ig on" onclick="selectKwP(this,'instagram')">📸 Instagram</button>
+      <button class="kw-ptab fb" onclick="selectKwP(this,'facebook')">📘 Facebook</button>
+      <button class="kw-ptab li" onclick="selectKwP(this,'linkedin')">💼 LinkedIn</button>
+      <button class="kw-ptab yt" onclick="selectKwP(this,'youtube')">▶ YouTube</button>
+    </div>
+    <input type="hidden" id="kw-platform" value="instagram">
+    <div class="fg">
+      <div class="f"><label>Industry</label><select id="kw-industry" onchange="toggleCustomNiche('kw')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Nutrition & Dietetics</option><option>Wellness & Holistic Health</option><option>Personal Brand</option><option>Agency / B2B</option><option>Luxury Goods</option><option>Custom Niche ↓</option></select></div>
+      <div class="f" id="kw-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="kw-custom-niche" placeholder="Describe your niche"></div>
+      <div class="f"><label>Topic / Seed Keyword</label><input type="text" id="kw-topic" placeholder="e.g. home workout, skincare routine, anxiety management"></div>
+      <div class="f"><label>Target Location</label><input type="text" id="kw-location" placeholder="e.g. UAE, UK, Global, Pakistan"></div>
+      <div class="f"><label>ICP</label><input type="text" id="kw-icp" placeholder="e.g. Women 25-40, working professionals"></div>
+      <div class="f"><label>Caption Tone</label>
+        <div class="voice-grid">
+          <button class="vp on" onclick="selectVG(this,'kw-vg','Bold & Edgy')">Bold & Edgy</button>
+          <button class="vp" onclick="selectVG(this,'kw-vg','Warm & Friendly')">Warm & Friendly</button>
+          <button class="vp" onclick="selectVG(this,'kw-vg','Professional')">Professional</button>
+          <button class="vp" onclick="selectVG(this,'kw-vg','Storytelling')">Storytelling</button>
+          <button class="vp" onclick="selectVG(this,'kw-vg','Empathetic')">Empathetic</button>
+          <button class="vp" onclick="selectVG(this,'kw-vg','Playful')">Playful</button>
+        </div>
+        <input type="hidden" id="kw-vg" value="Bold & Edgy">
+      </div>
+      <div class="f"><label>What to Generate</label><select id="kw-include"><option>Keywords + SEO Caption + Hashtags</option><option>Keyword Research Only</option><option>SEO Caption Only</option></select></div>
+    </div>
+    <div class="btn-row"><button class="btn bb" id="kw-btn" onclick="generateSEO()">🔍 Generate SEO Strategy</button></div>
+  </div>
+  <div id="kw-output"></div>
+</div>
+
+<!-- ═══════ YOUTUBE GROWTH ═══════ -->
+<div class="panel" id="tab-youtube">
+  <div class="card">
+    <div class="card-title">▶ YouTube Channel Growth & SEO <span class="tag tag-yt">Full Strategy</span></div>
+    <div class="info-box yt-info">YouTube is the world's 2nd largest search engine. Every video needs to be optimized for search, suggested, and browse features simultaneously — this tool covers all three plus channel-level SEO.</div>
+    <div class="yt-section-tabs">
+      <button class="yt-stab on" onclick="selectYtSection(this,'yt-channel')">📺 Channel SEO</button>
+      <button class="yt-stab" onclick="selectYtSection(this,'yt-video')">🎬 Video SEO</button>
+      <button class="yt-stab" onclick="selectYtSection(this,'yt-keywords')">🔍 Keyword Research</button>
+      <button class="yt-stab" onclick="selectYtSection(this,'yt-strategy')">📈 Growth Strategy</button>
+      <button class="yt-stab" onclick="selectYtSection(this,'yt-script')">📝 Script & Hook</button>
+    </div>
+
+    <!-- CHANNEL SEO -->
+    <div id="yt-channel" class="yt-section">
+      <div class="fg">
+        <div class="f"><label>Channel Niche</label><select id="ytc-industry" onchange="toggleCustomNiche('ytc')"><option>Fitness & Wellness</option><option>Food & Cooking</option><option>Finance & Investing</option><option>Tech & Reviews</option><option>Education & Tutorials</option><option>Beauty & Skincare</option><option>Travel & Lifestyle</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Nutrition & Dietetics</option><option>Wellness & Holistic Health</option><option>Real Estate</option><option>Business & Entrepreneurship</option><option>Fashion & Style</option><option>Motivational & Personal Dev</option><option>Gaming</option><option>Custom Niche ↓</option></select></div>
+        <div class="f" id="ytc-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="ytc-custom-niche" placeholder="Describe your channel niche"></div>
+        <div class="f"><label>Channel Name</label><input type="text" id="ytc-name" placeholder="e.g. FitLife UAE"></div>
+        <div class="f"><label>Target Audience</label><input type="text" id="ytc-audience" placeholder="e.g. Busy professionals 25-40 wanting quick workouts"></div>
+        <div class="f"><label>Location / Region</label><input type="text" id="ytc-location" placeholder="e.g. UAE, Global, UK"></div>
+        <div class="f"><label>Channel Stage</label><select id="ytc-stage"><option>Brand new (0 subscribers)</option><option>Small (under 1K)</option><option>Growing (1K–10K)</option><option>Established (10K–100K)</option><option>Large (100K+)</option></select></div>
+        <div class="f full"><label>What the channel does / main content topics</label><textarea id="ytc-topics" placeholder="e.g. We post 3x/week: workout tutorials, meal prep, and mindset content for busy professionals"></textarea></div>
+      </div>
+      <div class="btn-row"><button class="btn byt" id="ytc-btn" onclick="generateYtChannel()">📺 Optimize Channel SEO</button></div>
+    </div>
+
+    <!-- VIDEO SEO -->
+    <div id="yt-video" class="yt-section" style="display:none;">
+      <div class="fg">
+        <div class="f"><label>Channel Niche</label><select id="ytv-industry" onchange="toggleCustomNiche('ytv')"><option>Fitness & Wellness</option><option>Food & Cooking</option><option>Finance & Investing</option><option>Tech & Reviews</option><option>Education & Tutorials</option><option>Beauty & Skincare</option><option>Travel & Lifestyle</option><option>Healthcare & Medical</option><option>Mental Health & Therapy</option><option>Wellness & Holistic Health</option><option>Real Estate</option><option>Business & Entrepreneurship</option><option>Motivational & Personal Dev</option><option>Custom Niche ↓</option></select></div>
+        <div class="f" id="ytv-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="ytv-custom-niche" placeholder="Describe your niche"></div>
+        <div class="f"><label>Video Topic</label><input type="text" id="ytv-topic" placeholder="e.g. 10 minute morning workout for beginners"></div>
+        <div class="f"><label>Target Audience</label><input type="text" id="ytv-audience" placeholder="e.g. Women 25-40, beginners, UAE"></div>
+        <div class="f"><label>Video Format</label><select id="ytv-format"><option>Tutorial / How-To</option><option>Vlog / Day-in-Life</option><option>List / Top 10</option><option>Review</option><option>Case Study / Story</option><option>Q&A / FAQ</option><option>Interview</option><option>Shorts (under 60s)</option></select></div>
+        <div class="f"><label>Video Length</label><select id="ytv-length"><option>Short (under 5 min)</option><option>Medium (5–15 min)</option><option>Long (15–30 min)</option><option>Deep-dive (30+ min)</option><option>YouTube Short</option></select></div>
+      </div>
+      <div class="btn-row"><button class="btn byt" id="ytv-btn" onclick="generateYtVideo()">🎬 Generate Video SEO Package</button></div>
+    </div>
+
+    <!-- KEYWORD RESEARCH -->
+    <div id="yt-keywords" class="yt-section" style="display:none;">
+      <div class="fg">
+        <div class="f"><label>Niche</label><select id="ytkw-industry" onchange="toggleCustomNiche('ytkw')"><option>Fitness & Wellness</option><option>Food & Cooking</option><option>Finance & Investing</option><option>Tech & Reviews</option><option>Education & Tutorials</option><option>Beauty & Skincare</option><option>Travel & Lifestyle</option><option>Healthcare & Medical</option><option>Mental Health & Therapy</option><option>Wellness & Holistic Health</option><option>Real Estate</option><option>Business & Entrepreneurship</option><option>Custom Niche ↓</option></select></div>
+        <div class="f" id="ytkw-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="ytkw-custom-niche" placeholder="Describe your niche"></div>
+        <div class="f"><label>Seed Topic / Keyword</label><input type="text" id="ytkw-topic" placeholder="e.g. weight loss, anxiety, investing for beginners"></div>
+        <div class="f"><label>Target Location</label><input type="text" id="ytkw-location" placeholder="e.g. UAE, UK, Global, USA"></div>
+        <div class="f"><label>Channel Size</label><select id="ytkw-size"><option>New (0–1K)</option><option>Small (1K–10K)</option><option>Growing (10K–100K)</option><option>Large (100K+)</option></select></div>
+        <div class="f"><label>Competition Focus</label><select id="ytkw-comp"><option>All levels (Low + Med + High)</option><option>Low competition only (easiest to rank)</option><option>Medium competition</option><option>High volume regardless of competition</option></select></div>
+      </div>
+      <div class="btn-row"><button class="btn byt" id="ytkw-btn" onclick="generateYtKeywords()">🔍 Research YouTube Keywords</button></div>
+    </div>
+
+    <!-- GROWTH STRATEGY -->
+    <div id="yt-strategy" class="yt-section" style="display:none;">
+      <div class="fg">
+        <div class="f"><label>Niche</label><select id="ytg-industry" onchange="toggleCustomNiche('ytg')"><option>Fitness & Wellness</option><option>Food & Cooking</option><option>Finance & Investing</option><option>Tech & Reviews</option><option>Education & Tutorials</option><option>Beauty & Skincare</option><option>Travel & Lifestyle</option><option>Healthcare & Medical</option><option>Mental Health & Therapy</option><option>Wellness & Holistic Health</option><option>Real Estate</option><option>Business & Entrepreneurship</option><option>Custom Niche ↓</option></select></div>
+        <div class="f" id="ytg-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="ytg-custom-niche" placeholder="Describe your niche"></div>
+        <div class="f"><label>Current Subscribers</label><input type="text" id="ytg-subs" placeholder="e.g. 0, 500, 5000"></div>
+        <div class="f"><label>Target Audience</label><input type="text" id="ytg-audience" placeholder="e.g. Busy professionals, 25-40, UAE"></div>
+        <div class="f"><label>Upload Frequency</label><select id="ytg-freq"><option>1x / week</option><option>2x / week</option><option>3x / week</option><option>Daily</option><option>2x / month</option></select></div>
+        <div class="f"><label>Growth Goal</label><select id="ytg-goal"><option>Reach 1K subscribers fast</option><option>Monetize (1K subs + 4K hours)</option><option>Drive website traffic</option><option>Get appointment bookings</option><option>Build authority in niche</option><option>Grow to 100K+</option></select></div>
+      </div>
+      <div class="btn-row"><button class="btn byt" id="ytg-btn" onclick="generateYtStrategy()">📈 Generate Growth Strategy</button></div>
+    </div>
+
+    <!-- SCRIPT & HOOK -->
+    <div id="yt-script" class="yt-section" style="display:none;">
+      <div class="fg">
+        <div class="f"><label>Video Topic</label><input type="text" id="yts-topic" placeholder="e.g. 5 signs you have anxiety and what to do"></div>
+        <div class="f"><label>Niche</label><select id="yts-industry" onchange="toggleCustomNiche('yts')"><option>Fitness & Wellness</option><option>Food & Cooking</option><option>Finance & Investing</option><option>Tech & Reviews</option><option>Education & Tutorials</option><option>Beauty & Skincare</option><option>Healthcare & Medical</option><option>Mental Health & Therapy</option><option>Wellness & Holistic Health</option><option>Real Estate</option><option>Business & Entrepreneurship</option><option>Custom Niche ↓</option></select></div>
+        <div class="f" id="yts-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="yts-custom-niche" placeholder="Describe your niche"></div>
+        <div class="f"><label>Target Audience</label><input type="text" id="yts-audience" placeholder="e.g. Beginners, anxious professionals, new investors"></div>
+        <div class="f"><label>Video Length</label><select id="yts-length"><option>Short (3–7 min)</option><option>Medium (8–15 min)</option><option>Long (15–30 min)</option><option>YouTube Short</option></select></div>
+        <div class="f"><label>Brand Voice</label>
+          <div class="voice-grid">
+            <button class="vp on" onclick="selectVG(this,'yts-vg','Conversational & Relatable')">Conversational</button>
+            <button class="vp" onclick="selectVG(this,'yts-vg','Professional & Expert')">Professional</button>
+            <button class="vp" onclick="selectVG(this,'yts-vg','Motivational & Energetic')">Motivational</button>
+            <button class="vp" onclick="selectVG(this,'yts-vg','Empathetic & Caring')">Empathetic</button>
+            <button class="vp" onclick="selectVG(this,'yts-vg','Educational & Calm')">Educational</button>
+          </div>
+          <input type="hidden" id="yts-vg" value="Conversational & Relatable">
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn byt" id="yts-btn" onclick="generateYtScript()">📝 Generate Hook + Script Outline</button></div>
+    </div>
+  </div>
+  <div id="yt-output"></div>
+</div>
+
+<!-- ═══════ CLIENTS ═══════ -->
+<div class="panel" id="tab-clients">
+  <div class="card">
+    <div class="card-title">➕ Add / Edit Client Profile</div>
+    <div class="fg">
+      <div class="f"><label>Client Name</label><input type="text" id="cl-name" placeholder="e.g. FitLife UAE"></div>
+      <div class="f"><label>Industry</label><select id="cl-industry" onchange="toggleCustomNiche('cl')"><option>Fashion & Apparel</option><option>Fitness & Wellness</option><option>Food & Beverage</option><option>Real Estate</option><option>Tech & SaaS</option><option>Beauty & Skincare</option><option>Finance & Investing</option><option>Education & Coaching</option><option>E-commerce</option><option>Travel & Hospitality</option><option>Healthcare & Medical</option><option>Hospital & Medical Center</option><option>Mental Health & Therapy</option><option>Dental & Aesthetic Clinics</option><option>Nutrition & Dietetics</option><option>Wellness & Holistic Health</option><option>Pharmacy & Supplements</option><option>Personal Brand</option><option>Agency / B2B</option><option>Automotive</option><option>Luxury Goods</option><option>Custom Niche ↓</option></select></div>
+      <div class="f" id="cl-custom-niche-wrap" style="display:none;"><label>Custom Niche</label><input type="text" id="cl-custom-niche" placeholder="e.g. Sustainable baby products for eco-conscious parents"></div>
+      <div class="f"><label>Target ICP</label><input type="text" id="cl-icp" placeholder="e.g. Women 25-40, UAE, fitness enthusiasts"></div>
+      <div class="f"><label>Location / Region</label><input type="text" id="cl-location" placeholder="e.g. UAE, Global, UK"></div>
+      <div class="f"><label>Primary Platform</label><select id="cl-platform"><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>Facebook</option><option>YouTube</option><option>Multi-Platform</option></select></div>
+      <div class="f full"><label>Brand Voice</label>
+        <div class="voice-grid">
+          <button class="vp on" onclick="selectVG(this,'cl-vg','Bold & Edgy')">Bold & Edgy</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Warm & Friendly')">Warm & Friendly</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Professional')">Professional</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Playful & Fun')">Playful & Fun</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Luxury')">Luxury</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Raw & Honest')">Raw & Honest</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Motivational')">Motivational</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Educational')">Educational</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Empathetic & Caring')">Empathetic & Caring</button>
+          <button class="vp" onclick="selectVG(this,'cl-vg','Clinical & Trustworthy')">Clinical & Trustworthy</button>
+        </div>
+        <input type="hidden" id="cl-vg" value="Bold & Edgy">
+      </div>
+      <div class="f full"><label>Custom Brand Voice</label><textarea id="cl-custom-voice" placeholder="e.g. Like a brutally honest best friend who is also an expert. Never formal. Always real. Makes followers feel like insiders."></textarea></div>
+      <div class="f full"><label>Notes / Additional Context</label><textarea id="cl-notes" placeholder="Products, services, pain points, competitors, tone rules, goals, budget, etc."></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn bv" onclick="saveClient()">💾 Save Client</button>
+      <button class="btn bgh" onclick="clearClientForm()">Clear</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">👥 Saved Clients <span class="tag tag-v" id="client-count-tag">0 clients</span></div>
+    <div class="client-grid" id="client-grid"><div class="empty-state">No clients yet — add your first client above</div></div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title"></div>
+    <div id="modal-body"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;" id="modal-actions"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let clients=JSON.parse(localStorage.getItem('smm-clients')||'[]');
+let activeClient=JSON.parse(localStorage.getItem('smm-active')||'null');
+let calendarPosts=JSON.parse(localStorage.getItem('smm-calendar')||'{}');
+let calMonth=new Date().getMonth();
+let calYear=new Date().getFullYear();
+let currentYtSection='yt-channel';
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const POST_TYPES=[
+  {type:'edu',label:'Educational',cls:'pc-edu',weight:20},
+  {type:'sale',label:'Sales/Promo',cls:'pc-sale',weight:20},
+  {type:'story',label:'Story/Narrative',cls:'pc-story',weight:12},
+  {type:'relate',label:'Relatable/Pain',cls:'pc-relate',weight:12},
+  {type:'trend',label:'Trending',cls:'pc-trend',weight:12},
+  {type:'bts',label:'Behind Scenes',cls:'pc-bts',weight:12},
+  {type:'cont',label:'Opinion',cls:'pc-cont',weight:6},
+  {type:'trans',label:'Transformation',cls:'pc-trans',weight:6},
+];
+
+// ═══ HELPERS ═════════════════════════════════════════════════════════════════
+function getIndustry(prefix){
+  const sel=document.getElementById(prefix+'-industry');
+  if(!sel)return'';
+  const val=sel.value;
+  if(val==='Custom Niche ↓'){
+    const custom=document.getElementById(prefix+'-custom-niche');
+    return custom?custom.value||'Custom Niche':'Custom Niche';
+  }
+  return val;
+}
+
+function toggleCustomNiche(prefix){
+  const sel=document.getElementById(prefix+'-industry');
+  if(!sel)return;
+  const wrap=document.getElementById(prefix+'-custom-niche-wrap');
+  if(wrap)wrap.style.display=sel.value==='Custom Niche ↓'?'flex':'none';
+}
+
+function selectVG(el,groupId,val){
+  el.closest('.voice-grid').querySelectorAll('.vp').forEach(v=>v.classList.remove('on'));
+  el.classList.add('on');
+  const h=document.getElementById(groupId);
+  if(h)h.value=val;
+}
+function selectAdP(el,val){
+  document.querySelectorAll('.ad-ptab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');document.getElementById('paid-platform').value=val;
+}
+function selectKwP(el,val){
+  document.querySelectorAll('.kw-ptab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');document.getElementById('kw-platform').value=val;
+}
+function selectYtSection(el,sectionId){
+  document.querySelectorAll('.yt-stab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.yt-section').forEach(s=>s.style.display='none');
+  document.getElementById(sectionId).style.display='block';
+  currentYtSection=sectionId;
+}
+
+async function callAI(prompt,maxTokens=2000){
+  const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,maxTokens})});
+  const data=await res.json();
+  if(!res.ok)throw new Error(data.error||'API error '+res.status);
+  return data.text||'';
+}
+
+function showLoading(elId,msg){document.getElementById(elId).innerHTML=`<div class="ai-out typing">${msg}</div>`;}
+function showResult(elId,title,txt){document.getElementById(elId).innerHTML=`<div class="out-section"><div class="out-section-title">${title} <button class="copy-btn" onclick="copyText(this.closest('.out-section').querySelector('.out-content').textContent)">Copy</button></div><div class="out-content">${txt}</div></div>`;}
+
+// ═══ CALENDAR ════════════════════════════════════════════════════════════════
+function changeMonth(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  document.getElementById('cal-month').value=calMonth;
+  document.getElementById('cal-year').value=calYear;
+  renderCal();
+}
+function renderCal(){
+  const m=parseInt(document.getElementById('cal-month').value);
+  const y=parseInt(document.getElementById('cal-year').value);
+  calMonth=m;calYear=y;
+  document.getElementById('cal-title').textContent=MONTHS[m]+' '+y;
+  const firstDay=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  const grid=document.getElementById('cal-grid');
+  let html='';
+  for(let i=0;i<firstDay;i++)html+='<div class="cal-cell empty"></div>';
+  for(let d=1;d<=days;d++){
+    const key=y+'-'+m+'-'+d;
+    const posts=calendarPosts[key]||[];
+    const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
+    html+=`<div class="cal-cell ${posts.length?'has-post':''} ${isToday?'today':''}" onclick="openDay('${key}',${d})"><div class="cal-date">${d}</div>${posts.map(p=>`<div class="post-chip ${getPC(p.type)}" onclick="event.stopPropagation();openPost('${key}',${p.id})">${p.shortLabel}</div>`).join('')}</div>`;
+  }
+  grid.innerHTML=html;
+}
+function getPC(type){const t=POST_TYPES.find(p=>p.type===type);return t?t.cls:'pc-story';}
+function getPL(type){const t=POST_TYPES.find(p=>p.type===type);return t?t.label:type;}
+
+async function generateCalendar(){
+  const m=parseInt(document.getElementById('cal-month').value);
+  const y=parseInt(document.getElementById('cal-year').value);
+  const freq=parseInt(document.getElementById('cal-freq').value);
+  const platform=document.getElementById('cal-platform').value;
+  const industry=getIndustry('cal');
+  const icp=document.getElementById('cal-icp').value||'general audience';
+  const customVoice=document.getElementById('cal-custom-voice').value;
+  const voice=document.getElementById('cal-voice').value;
+  const finalVoice=customVoice||voice;
+  const btn=document.getElementById('cal-btn');
+  btn.disabled=true;btn.textContent='⏳ Generating...';
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const totalPosts=Math.round(freq*(daysInMonth/7));
+  const dist=[];let rem=totalPosts;
+  POST_TYPES.forEach((pt,i)=>{const count=i<POST_TYPES.length-1?Math.round(totalPosts*pt.weight/100):rem;if(count>0){dist.push({...pt,count});rem-=count;}});
+  const prompt=`Expert social media strategist. Create a ${MONTHS[m]} ${y} content calendar for a ${industry} brand on ${platform}.
+ICP: ${icp} | Voice: ${finalVoice} | Posts: ${totalPosts} | Days: ${daysInMonth}
+Distribution: ${dist.map(d=>d.count+'x '+d.label).join(', ')}
+
+CRITICAL:
+1. Edu(20%) and Sales(20%) fixed. The 60% "This Is ME" content MUST use MULTIPLE VARIANTS — never repeat same angle:
+   Story: personal journey/founder/client/day-in-life/failure/win/behind-brand
+   Relatable: "we all do this"/shared struggle/universal truth/nobody talks about this
+   Trending: reactive/current niche events/seasonal/trending formats
+   BTS: process/team/workspace/raw moments/before-after process
+   Controversial: stance/challenge assumption/myth-busting
+   Transformation: client results/before-after/case study/proof
+2. Every post must feel LIVED-IN. Specific details. Real emotions. Not generic.
+3. For healthcare/medical/wellness: content must be empathetic, evidence-based, never fear-mongering
+4. Spread posts across the month naturally
+Return ONLY JSON (no markdown):
+{"posts":[{"day":1,"type":"edu|sale|story|relate|trend|bts|cont|trans","shortLabel":"max 3 words","hook":"scroll-stopping first line — specific not generic","angle":"what makes this real and personal to ICP","caption":"full caption 150-200 words, personality, SEO keywords naturally placed, line breaks, strategic emojis","cta":"specific CTA","format":"Reel|Carousel|Static|Story|Text","bestTime":"best posting time"}]}`;
+  try{
+    const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,maxTokens:8000})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Error');
+    let txt=(data.text||'').replace(/```json|```/g,'').trim();
+    const result=JSON.parse(txt);
+    calendarPosts={};
+    result.posts.forEach((p,i)=>{const key=y+'-'+m+'-'+p.day;if(!calendarPosts[key])calendarPosts[key]=[];calendarPosts[key].push({...p,id:i});});
+    localStorage.setItem('smm-calendar',JSON.stringify(calendarPosts));
+    calMonth=m;calYear=y;renderCal();
+    toast(result.posts.length+' posts generated for '+MONTHS[m]+' ✦');
+  }catch(e){toast((e.message||'Error').slice(0,80),'#ef4444');}
+  btn.disabled=false;btn.textContent='✦ Generate Full Month';
+}
+function clearCalendar(){calendarPosts={};localStorage.setItem('smm-calendar','{}');renderCal();}
+function openPost(key,id){
+  const p=(calendarPosts[key]||[]).find(x=>x.id===id);
+  if(!p)return;
+  document.getElementById('modal-title').innerHTML=`<span style="font-size:11px;color:var(--muted2);font-family:'Fira Code',monospace;display:block;margin-bottom:4px;">${getPL(p.type)} · ${p.format} · ${p.bestTime}</span>${p.hook}`;
+  document.getElementById('modal-body').innerHTML=`<div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;"><div class="out-section"><div class="out-section-title" style="font-size:11px;color:var(--muted2);">CONTENT ANGLE</div><div class="out-content">${p.angle}</div></div><div class="out-section"><div class="out-section-title" style="font-size:11px;color:var(--muted2);">FULL CAPTION <button class="copy-btn" onclick="copyText(document.getElementById('cap-txt').textContent)">Copy</button></div><div class="out-content" id="cap-txt">${p.caption}</div></div><div class="out-section"><div class="out-section-title" style="font-size:11px;color:var(--muted2);">CTA</div><div class="out-content">${p.cta}</div></div></div>`;
+  document.getElementById('modal-actions').innerHTML=`<button class="btn bv bsm" onclick="copyText(document.getElementById('cap-txt').textContent)">📋 Copy Caption</button><button class="btn bgh bsm" onclick="closeModalDirect()">Close</button>`;
+  document.getElementById('modal').classList.add('open');
+}
+function openDay(key,day){
+  const posts=calendarPosts[key]||[];
+  if(!posts.length)return;
+  if(posts.length===1){openPost(key,posts[0].id);return;}
+  document.getElementById('modal-title').textContent='Day '+day+' — '+posts.length+' Posts';
+  document.getElementById('modal-body').innerHTML=posts.map(p=>`<div class="out-section" style="cursor:pointer;" onclick="openPost('${key}',${p.id})"><div style="display:flex;align-items:center;justify-content:space-between;"><div><div class="post-chip ${getPC(p.type)}" style="display:inline-block;margin-bottom:6px;">${getPL(p.type)}</div><div style="font-size:13px;font-weight:600;">${p.hook}</div><div style="font-size:11px;color:var(--muted2);margin-top:3px;">${p.format} · ${p.bestTime}</div></div><span style="color:var(--v2);font-size:18px;">→</span></div></div>`).join('');
+  document.getElementById('modal-actions').innerHTML='<button class="btn bgh bsm" onclick="closeModalDirect()">Close</button>';
+  document.getElementById('modal').classList.add('open');
+}
+
+// ═══ ORGANIC ═════════════════════════════════════════════════════════════════
+async function generateOrganic(){
+  const platform=document.getElementById('org-platform').value;
+  const industry=getIndustry('org');
+  const icp=document.getElementById('org-icp').value||'general audience';
+  const size=document.getElementById('org-size').value;
+  const voice=document.getElementById('org-vg').value;
+  const goal=document.getElementById('org-goal').value;
+  const btn=document.getElementById('org-btn');
+  btn.disabled=true;btn.textContent='⏳ Generating...';
+  showLoading('org-output','Generating reach strategy...');
+  try{
+    const txt=await callAI(`Expert social media growth strategist. Hyper-specific organic reach strategy:
+Platform: ${platform} | Industry: ${industry} | ICP: ${icp} | Size: ${size} | Voice: ${voice} | Goal: ${goal}
+${industry.includes('Health')||industry.includes('Medical')||industry.includes('Hospital')||industry.includes('Therapy')||industry.includes('Wellness')?'NOTE: Healthcare/medical niche — all content must be compliant, empathetic, evidence-based. No fear-based tactics.':''}
+Cover:
+1. CONTENT FORMATS — what the ${platform} algorithm pushes right now (specific not generic)
+2. POSTING STRATEGY — optimal times/frequency for ${platform}
+3. HOOK FORMULAS — 5 scroll-stopping hooks tailored to ${icp} in ${industry}. Feel REAL not template-y.
+4. TRENDING ANGLES — 5 content ideas where ${icp} stops and thinks "this is literally me"
+5. COLLABORATION STRATEGY — exact account types, how to approach, what to offer
+6. ALGORITHM SIGNALS — specific actions to trigger wider distribution on ${platform}
+7. CROSS-SURFACE STRATEGY — Stories/Reels/Lives to amplify reach
+Everything for ${industry} targeting ${icp}. No generic advice.`);
+    showResult('org-output','🚀 Organic Reach Strategy for '+industry,txt);
+  }catch(e){document.getElementById('org-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='🚀 Generate Reach Strategy';
+}
+
+// ═══ ENGAGEMENT ══════════════════════════════════════════════════════════════
+async function generateEngagement(){
+  const platform=document.getElementById('eng-platform').value;
+  const industry=getIndustry('eng');
+  const icp=document.getElementById('eng-icp').value||'general audience';
+  const voice=document.getElementById('eng-vg').value;
+  const type=document.getElementById('eng-type').value;
+  const postType=document.getElementById('eng-post-type').value;
+  const btn=document.getElementById('eng-btn');
+  btn.disabled=true;btn.textContent='⏳ Generating...';
+  showLoading('eng-output','Generating engagement strategy...');
+  try{
+    const txt=await callAI(`Engagement optimization expert.
+Platform: ${platform} | Industry: ${industry} | ICP: ${icp} | Voice: ${voice} | Goal: ${type} | Format: ${postType}
+1. CAPTION FRAMEWORKS — 3 structures driving ${type} for ${postType}. Feel human, real experience.
+2. CTA SCRIPTS — 5 CTAs feeling natural for ${icp} psychology.
+3. COMMENT TRIGGERS — questions/incomplete statements/controversial takes for ${industry} making people NEED to comment
+4. INTERACTIVE IDEAS — 5 poll/quiz/question box ideas personal to this audience (not generic)
+5. COMMENT LOOP TEMPLATES — 3 reply templates generating more replies
+6. SAVE-WORTHY IDEAS — 5 content ideas making ${icp} bookmark immediately
+7. SHARE PSYCHOLOGY — what specifically makes THIS ICP share (psychologically precise)
+Voice: ${voice}. Nothing generic.`);
+    showResult('eng-output','💬 Engagement Strategy',txt);
+  }catch(e){document.getElementById('eng-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='💬 Generate Engagement Strategy';
+}
+
+// ═══ PAID ════════════════════════════════════════════════════════════════════
+async function generatePaid(){
+  const platform=document.getElementById('paid-platform').value;
+  const industry=getIndustry('paid');
+  const objective=document.getElementById('paid-objective').value;
+  const icp=document.getElementById('paid-icp').value;
+  const budget=document.getElementById('paid-budget').value;
+  const product=document.getElementById('paid-product').value;
+  const usp=document.getElementById('paid-usp').value;
+  const btn=document.getElementById('paid-btn');
+  const labels={meta:'Meta (Facebook & Instagram)',linkedin:'LinkedIn Ads',google:'Google Ads'};
+  btn.disabled=true;btn.textContent='⏳ Generating...';
+  showLoading('paid-output','Building ad strategy...');
+  try{
+    const txt=await callAI(`Paid media expert for ${labels[platform]}.
+Industry: ${industry} | Objective: ${objective} | ICP: ${icp} | Budget: ${budget}/mo | Product: ${product} | USP: ${usp}
+1. AUDIENCE TARGETING — Specific ${platform==='meta'?'interests, behaviors, demographics, custom audiences, lookalikes':platform==='linkedin'?'job titles, seniority, company size, industries, skills':'keywords, match types, audiences, intent layers'}
+2. CAMPAIGN STRUCTURE — exact structure for ${budget}/mo
+3. CREATIVE PERFORMANCE — which formats perform best for ${objective}+${icp}. Include % differences. What makes HIGH vs LOW performing creative for this ICP.
+4. AD COPY — 3 different angles (hook+body+CTA). Personal not corporate. Speak to ${icp} pain points.
+5. BUDGET SPLIT — exact allocation with rationale
+6. BIDDING STRATEGY — which bid strategy, why, what to watch
+7. CREATIVE FATIGUE PREVENTION — how many creatives, rotation, refresh signals
+8. KPIs & BENCHMARKS — what good looks like for ${industry}/${objective}
+9. RETARGETING LAYERS — full funnel setup`,2500);
+    showResult('paid-output','💰 '+labels[platform]+' Strategy',txt);
+  }catch(e){document.getElementById('paid-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='💰 Generate Ad Strategy';
+}
+
+// ═══ HASHTAGS ════════════════════════════════════════════════════════════════
+async function generateHashtags(){
+  const platform=document.getElementById('ht-platform').value;
+  const industry=getIndustry('ht');
+  const topic=document.getElementById('ht-topic').value||industry;
+  const location=document.getElementById('ht-location').value||'Global';
+  const size=document.getElementById('ht-size').value;
+  const format=document.getElementById('ht-format').value;
+  const btn=document.getElementById('ht-btn');
+  btn.disabled=true;btn.textContent='⏳ Building...';
+  showLoading('ht-output','Building 4-surface hashtag stack...');
+  try{
+    const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Hashtag expert for ${platform}. 4-surface stack:
+Industry: ${industry} | Topic: ${topic} | Location: ${location} | Size: ${size} | Format: ${format}
+1. EXPLORE/DISCOVERY (8): niche 10K-500K where account can rank, reach NON-FOLLOWERS
+2. FEED/SEARCH (7): keywords people actively TYPE, SEO-intent
+3. HOME FEED (7): community+industry tags used daily by followers AND their networks
+4. REELS/TRENDING (6): trending tags triggering algorithm amplification to NEW audiences
+No banned tags. No oversaturated generic ones. Location-relevant for ${location}.
+JSON ONLY:
+{"explore":[{"tag":"#x","size":"125K","why":"reason"}],"feed":[{"tag":"#x","size":"2M","why":"reason"}],"home":[{"tag":"#x","size":"450K","why":"reason"}],"reels":[{"tag":"#x","size":"890K","why":"reason"}],"strategy":"how to use together","avoid":["#x"],"placement":"first comment or caption with reason"}`}]})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Error');
+    let txt=(data.text||'').replace(/```json|```/g,'').trim();
+    const r=JSON.parse(txt);
+    const allTags=[...r.explore,...r.feed,...r.home,...r.reels].map(h=>h.tag).join(' ');
+    document.getElementById('ht-output').innerHTML=`
+      <div class="out-section">
+        <div class="out-section-title">🏷 4-Surface Stack (${[...r.explore,...r.feed,...r.home,...r.reels].length} tags) <button class="copy-btn" onclick="copyText('${allTags.replace(/'/g,"\\'")}')">Copy All</button></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+          <div class="surface-box" style="background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--v3);margin-bottom:3px;">🟣 Explore / Discovery</div>
+            <div style="font-size:10px;color:var(--muted2);margin-bottom:9px;">Non-followers · Explore page</div>
+            <div>${r.explore.map(h=>`<span class="ht ht-explore" onclick="copyText('${h.tag}')" title="${h.why}">${h.tag}<span class="ht-size">${h.size}</span></span>`).join('')}</div>
+            <button class="copy-btn" style="margin-top:8px;" onclick="copyText('${r.explore.map(h=>h.tag).join(' ')}')">Copy layer</button>
+          </div>
+          <div class="surface-box" style="background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--cy);margin-bottom:3px;">🔵 Feed / Search</div>
+            <div style="font-size:10px;color:var(--muted2);margin-bottom:9px;">Active searchers · SEO reach</div>
+            <div>${r.feed.map(h=>`<span class="ht ht-feed" onclick="copyText('${h.tag}')" title="${h.why}">${h.tag}<span class="ht-size">${h.size}</span></span>`).join('')}</div>
+            <button class="copy-btn" style="margin-top:8px;" onclick="copyText('${r.feed.map(h=>h.tag).join(' ')}')">Copy layer</button>
+          </div>
+          <div class="surface-box" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gn);margin-bottom:3px;">🟢 Home Feed</div>
+            <div style="font-size:10px;color:var(--muted2);margin-bottom:9px;">Followers + their network</div>
+            <div>${r.home.map(h=>`<span class="ht ht-home" onclick="copyText('${h.tag}')" title="${h.why}">${h.tag}<span class="ht-size">${h.size}</span></span>`).join('')}</div>
+            <button class="copy-btn" style="margin-top:8px;" onclick="copyText('${r.home.map(h=>h.tag).join(' ')}')">Copy layer</button>
+          </div>
+          <div class="surface-box" style="background:rgba(236,72,153,.06);border:1px solid rgba(236,72,153,.2);">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--pk);margin-bottom:3px;">🩷 Reels / Trending</div>
+            <div style="font-size:10px;color:var(--muted2);margin-bottom:9px;">Algorithm push · New audiences</div>
+            <div>${r.reels.map(h=>`<span class="ht ht-reel" onclick="copyText('${h.tag}')" title="${h.why}">${h.tag}<span class="ht-size">${h.size}</span></span>`).join('')}</div>
+            <button class="copy-btn" style="margin-top:8px;" onclick="copyText('${r.reels.map(h=>h.tag).join(' ')}')">Copy layer</button>
+          </div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:180px;background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.18);border-radius:8px;padding:11px;"><div style="font-size:11px;color:var(--v3);margin-bottom:5px;font-weight:600;">✦ How to Use</div><div style="font-size:12px;color:var(--muted2);">${r.strategy}</div></div>
+          <div style="flex:1;min-width:180px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:8px;padding:11px;"><div style="font-size:11px;color:var(--rd);margin-bottom:5px;font-weight:600;">🚫 Avoid</div><div style="font-size:12px;color:var(--muted2);">${r.avoid?.join(' · ')||'None'}</div></div>
+          <div style="flex:1;min-width:180px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:8px;padding:11px;"><div style="font-size:11px;color:var(--gn);margin-bottom:5px;font-weight:600;">📌 Placement</div><div style="font-size:12px;color:var(--muted2);">${r.placement}</div></div>
+        </div>
+      </div>`;
+    toast('Stack ready — click any tag to copy!');
+  }catch(e){document.getElementById('ht-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='🏷 Generate 4-Surface Stack';
+}
+
+// ═══ SEO & KEYWORDS ══════════════════════════════════════════════════════════
+async function generateSEO(){
+  const platform=document.getElementById('kw-platform').value;
+  const industry=getIndustry('kw');
+  const topic=document.getElementById('kw-topic').value;
+  const location=document.getElementById('kw-location').value||'Global';
+  const icp=document.getElementById('kw-icp').value||'general audience';
+  const voice=document.getElementById('kw-vg').value;
+  const include=document.getElementById('kw-include').value;
+  if(!topic){toast('Enter a topic or seed keyword','#ef4444');return;}
+  const btn=document.getElementById('kw-btn');
+  btn.disabled=true;btn.textContent='⏳ Researching...';
+  showLoading('kw-output','Researching keywords...');
+
+  const platformContext={
+    instagram:'Instagram search and Explore optimization. Instagram now indexes keywords in captions, bios, and alt text.',
+    facebook:'Facebook search optimization. Facebook ranks content by keyword relevance, engagement signals, and group/page authority.',
+    linkedin:'LinkedIn search and feed algorithm. LinkedIn prioritizes keyword-rich posts, headlines, and profile optimization for B2B discovery.',
+    youtube:'YouTube search engine optimization. YouTube is the world\'s 2nd largest search engine. Keywords in title, description, tags, chapters, and spoken content all matter.'
+  };
+
+  const platformSpecific={
+    instagram:'Caption SEO, alt text keywords, bio optimization, hashtag SEO',
+    facebook:'Post SEO, page/group keywords, Facebook search ranking factors',
+    linkedin:'Post SEO, headline optimization, connection reach, B2B keyword strategy',
+    youtube:'Title optimization, description SEO, tags, chapters, thumbnail CTR, video SEO'
+  };
+
+  try{
+    const txt=await callAI(`SEO expert for ${platform}. Platform context: ${platformContext[platform]}
+Industry: ${industry} | Topic: "${topic}" | Location: ${location} | ICP: ${icp} | Voice: ${voice}
+
+${include.includes('Keyword')?`
+KEYWORD RESEARCH for ${platform.toUpperCase()} — 20 keywords low to high competition:
+- 7 LOW competition (niche, long-tail, easiest to rank) — explain WHY low competition
+- 7 MEDIUM competition (good balance) — search volume estimate
+- 6 HIGH competition (worth targeting with strong content) — how to approach
+For each: keyword | competition | volume estimate | why it works for ${icp} | best content format for ${platform}
+Platform-specific note: ${platformSpecific[platform]}
+`:''}
+${include.includes('Caption')?`
+SEO-OPTIMIZED ${platform.toUpperCase()} ${platform==='youtube'?'VIDEO DESCRIPTION':'CAPTION'}:
+Write a 100% SEO-optimized ${platform==='youtube'?'YouTube video description (300-500 words) with timestamps, keywords in first 2 sentences, links section':'caption (150-200 words)'} about "${topic}":
+- Voice: ${voice} — feels HUMAN not robot
+- Keywords woven naturally in first ${platform==='youtube'?'2 sentences':'125 chars'}
+- Specific to ${icp} — feels like it's happening to THEM
+- Strategic line breaks + emojis
+- Strong CTA for ${platform}
+- After: note which keywords placed where and why
+`:''}
+${include.includes('Hashtag')?`
+${platform==='linkedin'?'LINKEDIN HASHTAGS — 10 hashtags people actively search on LinkedIn (professional, industry-specific, trending B2B)':platform==='youtube'?'YOUTUBE TAGS — 15 video tags from specific to broad. Mix of exact match and related terms. Note search volume category for each.':'SEO HASHTAGS — 10 hashtags people actively search (not just scroll past). Mix of keyword-based, question-based, intent-based.'}
+`:''}`,3000);
+    showResult('kw-output',`🔍 SEO Strategy for "${topic}" on ${platform.charAt(0).toUpperCase()+platform.slice(1)}`,txt);
+  }catch(e){document.getElementById('kw-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='🔍 Generate SEO Strategy';
+}
+
+// ═══ YOUTUBE GROWTH ═══════════════════════════════════════════════════════════
+async function generateYtChannel(){
+  const industry=getIndustry('ytc');
+  const name=document.getElementById('ytc-name').value||'Your Channel';
+  const audience=document.getElementById('ytc-audience').value||'general audience';
+  const location=document.getElementById('ytc-location').value||'Global';
+  const stage=document.getElementById('ytc-stage').value;
+  const topics=document.getElementById('ytc-topics').value||industry;
+  const btn=document.getElementById('ytc-btn');
+  btn.disabled=true;btn.textContent='⏳ Optimizing...';
+  showLoading('yt-output','Generating channel SEO strategy...');
+  try{
+    const txt=await callAI(`YouTube SEO expert. Complete channel optimization for:
+Channel: ${name} | Niche: ${industry} | Audience: ${audience} | Location: ${location} | Stage: ${stage} | Content: ${topics}
+
+Provide:
+1. CHANNEL NAME OPTIMIZATION — is it SEO-friendly? Suggestions if needed.
+2. CHANNEL DESCRIPTION — write a fully SEO-optimized About section (1000 chars) with primary and secondary keywords naturally placed. Include what the channel does, who it's for, upload schedule, and a CTA.
+3. CHANNEL KEYWORDS — 15 channel-level keyword tags from broad to niche (these go in YouTube Studio settings)
+4. CHANNEL TRAILER SCRIPT — 30-60 second script that hooks new visitors and drives subscribes. Make it feel REAL not scripted.
+5. PLAYLIST STRATEGY — 5 playlist ideas with SEO-optimized names that improve watch time and session length
+6. CHANNEL ART & THUMBNAIL STRATEGY — what to include, colors, text overlay rules for click-through rate
+7. ABOUT PAGE LINKS STRATEGY — which links to include and why
+8. COMMUNITY TAB STRATEGY — how to use it to drive engagement and algorithm signals
+Be specific to ${industry} niche.`,2500);
+    showResult('yt-output','📺 Channel SEO Package for '+name,txt);
+  }catch(e){document.getElementById('yt-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='📺 Optimize Channel SEO';
+}
+
+async function generateYtVideo(){
+  const industry=getIndustry('ytv');
+  const topic=document.getElementById('ytv-topic').value;
+  const audience=document.getElementById('ytv-audience').value||'general audience';
+  const format=document.getElementById('ytv-format').value;
+  const length=document.getElementById('ytv-length').value;
+  if(!topic){toast('Enter a video topic','#ef4444');return;}
+  const btn=document.getElementById('ytv-btn');
+  btn.disabled=true;btn.textContent='⏳ Generating...';
+  showLoading('yt-output','Generating video SEO package...');
+  try{
+    const txt=await callAI(`YouTube video SEO expert. Complete video optimization package:
+Niche: ${industry} | Topic: "${topic}" | Audience: ${audience} | Format: ${format} | Length: ${length}
+
+Provide the complete SEO package:
+1. VIDEO TITLE OPTIONS (5 variations) — ranked by click-through potential. Each under 60 chars. Include primary keyword near the start. Make them compelling enough to click.
+2. PRIMARY KEYWORD + 10 RELATED KEYWORDS — with search intent classification (informational/navigational/transactional)
+3. VIDEO DESCRIPTION — fully optimized 500-word description:
+   - First 2 sentences: hook + primary keyword (visible before "show more")
+   - Timestamps/chapters section
+   - Detailed content summary with keywords
+   - Links section placeholder
+   - Hashtags (3-5 in description)
+   - Subscribe CTA
+4. VIDEO TAGS — 20 tags from exact-match to broad. Mix of: exact topic, related topics, niche terms, broad category
+5. THUMBNAIL CONCEPT — what text, colors, facial expression/image, layout drives highest CTR for this topic and audience
+6. END SCREEN STRATEGY — what to link and when
+7. CARDS STRATEGY — where to place cards in the video
+8. CHAPTER TIMESTAMPS — suggested chapter names and timing for ${length} video`,2500);
+    showResult('yt-output','🎬 Video SEO Package: "'+topic+'"',txt);
+  }catch(e){document.getElementById('yt-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='🎬 Generate Video SEO Package';
+}
+
+async function generateYtKeywords(){
+  const industry=getIndustry('ytkw');
+  const topic=document.getElementById('ytkw-topic').value;
+  const location=document.getElementById('ytkw-location').value||'Global';
+  const size=document.getElementById('ytkw-size').value;
+  const comp=document.getElementById('ytkw-comp').value;
+  if(!topic){toast('Enter a seed topic','#ef4444');return;}
+  const btn=document.getElementById('ytkw-btn');
+  btn.disabled=true;btn.textContent='⏳ Researching...';
+  showLoading('yt-output','Researching YouTube keywords...');
+  try{
+    const txt=await callAI(`YouTube keyword research expert. Deep keyword research:
+Niche: ${industry} | Seed: "${topic}" | Location: ${location} | Channel size: ${size} | Focus: ${comp}
+
+Provide:
+1. PRIMARY KEYWORDS (10) — best main keywords to target, with:
+   - Estimated monthly searches
+   - Competition level (Low/Med/High) for ${size} channel
+   - Search intent (tutorial/review/inspiration/information)
+   - Best video format to rank for it
+   - Why it's right for ${size} channel
+
+2. LONG-TAIL GOLDMINES (10) — highly specific low-competition keywords with:
+   - Why these are easier to rank
+   - Estimated searches
+   - Exact title formula that would rank
+
+3. TRENDING KEYWORDS (5) — currently rising keywords in ${industry} niche
+
+4. QUESTION KEYWORDS (8) — "how to", "why does", "what is" format questions people search. High intent, great for tutorials.
+
+5. COMPETITOR GAP KEYWORDS (5) — keywords where small channels can outrank big ones in ${industry}
+
+6. KEYWORD CLUSTERING — how to group these into a video series strategy (3-5 cluster ideas)
+
+All tailored to ${location} audience and ${size} channel reality.`,2500);
+    showResult('yt-output','🔍 YouTube Keyword Research: "'+topic+'"',txt);
+  }catch(e){document.getElementById('yt-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='🔍 Research YouTube Keywords';
+}
+
+async function generateYtStrategy(){
+  const industry=getIndustry('ytg');
+  const subs=document.getElementById('ytg-subs').value||'0';
+  const audience=document.getElementById('ytg-audience').value||'general audience';
+  const freq=document.getElementById('ytg-freq').value;
+  const goal=document.getElementById('ytg-goal').value;
+  const btn=document.getElementById('ytg-btn');
+  btn.disabled=true;btn.textContent='⏳ Generating...';
+  showLoading('yt-output','Building YouTube growth strategy...');
+  try{
+    const txt=await callAI(`YouTube growth strategist. Complete channel growth plan:
+Niche: ${industry} | Current subs: ${subs} | Audience: ${audience} | Upload: ${freq} | Goal: ${goal}
+
+Provide:
+1. CONTENT PILLARS — 3-4 content categories to build authority and attract the right audience in ${industry}
+2. VIDEO IDEAS (10) — specific video ideas with title, format, and why it will perform. Mix of evergreen and trending.
+3. UPLOAD SCHEDULE — best days/times for ${industry} niche and ${audience}
+4. FIRST 90-DAY ROADMAP — week-by-week action plan to achieve ${goal}
+5. THUMBNAIL A/B TESTING STRATEGY — what to test first for maximum CTR improvement
+6. WATCH TIME OPTIMIZATION — specific techniques for ${industry} content to keep viewers watching
+7. COMMUNITY BUILDING — how to build a loyal community not just subscribers
+8. CROSS-PLATFORM AMPLIFICATION — how to use other platforms to grow YouTube faster
+9. MONETIZATION PATH — what to build toward beyond just AdSense
+10. SHORTS STRATEGY — how to use YouTube Shorts to feed the main channel
+Be realistic for a ${subs}-subscriber channel. Specific not generic.`,2500);
+    showResult('yt-output','📈 YouTube Growth Strategy',txt);
+  }catch(e){document.getElementById('yt-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='📈 Generate Growth Strategy';
+}
+
+async function generateYtScript(){
+  const topic=document.getElementById('yts-topic').value;
+  const industry=getIndustry('yts');
+  const audience=document.getElementById('yts-audience').value||'general audience';
+  const length=document.getElementById('yts-length').value;
+  const voice=document.getElementById('yts-vg').value;
+  if(!topic){toast('Enter a video topic','#ef4444');return;}
+  const btn=document.getElementById('yts-btn');
+  btn.disabled=true;btn.textContent='⏳ Writing...';
+  showLoading('yt-output','Writing hook and script outline...');
+  try{
+    const txt=await callAI(`YouTube scriptwriter and hook specialist.
+Topic: "${topic}" | Niche: ${industry} | Audience: ${audience} | Length: ${length} | Voice: ${voice}
+
+Provide:
+1. HOOK VARIATIONS (5) — first 15 seconds of the video. Different approaches:
+   - Pattern interrupt hook
+   - Bold statement hook
+   - Question hook
+   - Story hook
+   - Statistic/surprising fact hook
+   Each hook should make ${audience} feel this video is SPECIFICALLY for them.
+
+2. RETENTION INTRO (30 seconds) — after the hook: tease what they'll learn, build credibility, tell them to stay for the specific thing at the end. For ${voice} voice.
+
+3. FULL SCRIPT OUTLINE — section by section:
+   - Hook (0:00–0:15)
+   - Intro/credibility (0:15–1:00)
+   - Main content sections with key points
+   - Pattern interrupts to prevent drop-off
+   - CTA placement (where in video + what to say)
+   - Outro (what to say, how long)
+
+4. PATTERN INTERRUPT IDEAS — 3 ways to re-engage viewers at the 2-minute and 5-minute marks
+
+5. VERBAL SEO TIPS — what words/phrases to say naturally in the video so YouTube's auto-captions index the right keywords
+
+Voice throughout: ${voice}. Make it feel real, not scripted.`,2000);
+    showResult('yt-output','📝 Script & Hook: "'+topic+'"',txt);
+  }catch(e){document.getElementById('yt-output').innerHTML='<div class="ai-out" style="color:#ef4444">⚠ '+(e.message||'Error. Try again.')+'</div>';}
+  btn.disabled=false;btn.textContent='📝 Generate Hook + Script Outline';
+}
+
+// ═══ CLIENTS ═════════════════════════════════════════════════════════════════
+function saveClient(){
+  const name=document.getElementById('cl-name').value.trim();
+  if(!name){toast('Enter a client name','#ef4444');return;}
+  const industry=getIndustry('cl');
+  const client={id:Date.now(),name,industry,icp:document.getElementById('cl-icp').value,location:document.getElementById('cl-location').value,platform:document.getElementById('cl-platform').value,voice:document.getElementById('cl-vg').value,customVoice:document.getElementById('cl-custom-voice').value,notes:document.getElementById('cl-notes').value,customNiche:document.getElementById('cl-custom-niche').value};
+  const idx=clients.findIndex(c=>c.name.toLowerCase()===name.toLowerCase());
+  if(idx>=0)clients[idx]=client;else clients.push(client);
+  localStorage.setItem('smm-clients',JSON.stringify(clients));
+  renderClients();clearClientForm();toast(name+' saved ✦');
+}
+
+function selectClient(id){
+  activeClient=clients.find(c=>c.id===id);
+  localStorage.setItem('smm-active',JSON.stringify(activeClient));
+  document.getElementById('active-badge').textContent='👤 '+activeClient.name;
+  const prefills=[
+    {ind:'cal-industry',icp:'cal-icp',plat:'cal-platform'},
+    {ind:'org-industry',icp:'org-icp',plat:'org-platform'},
+    {ind:'eng-industry',icp:'eng-icp',plat:null},
+    {ind:'ht-industry',icp:null,plat:'ht-platform',loc:'ht-location'},
+    {ind:'kw-industry',icp:'kw-icp',plat:null,loc:'kw-location'},
+    {ind:'paid-industry',icp:'paid-icp',plat:null},
+    {ind:'ytc-industry',loc:'ytc-location'},
+    {ind:'ytg-industry'},
+    {ind:'ytkw-industry',loc:'ytkw-location'},
+  ];
+  prefills.forEach(f=>{
+    if(f.ind&&document.getElementById(f.ind)){document.getElementById(f.ind).value=activeClient.industry;}
+    if(f.icp&&document.getElementById(f.icp))document.getElementById(f.icp).value=activeClient.icp||'';
+    if(f.plat&&document.getElementById(f.plat)&&activeClient.platform)document.getElementById(f.plat).value=activeClient.platform;
+    if(f.loc&&document.getElementById(f.loc))document.getElementById(f.loc).value=activeClient.location||'';
+  });
+  if(activeClient.customVoice)document.getElementById('cal-custom-voice').value=activeClient.customVoice;
+  renderClients();
+  toast('Switched to '+activeClient.name+' ✦');
+}
+
+function deleteClient(id){
+  if(!confirm('Delete this client?'))return;
+  clients=clients.filter(c=>c.id!==id);
+  localStorage.setItem('smm-clients',JSON.stringify(clients));
+  if(activeClient&&activeClient.id===id){activeClient=null;localStorage.removeItem('smm-active');document.getElementById('active-badge').textContent='👤 No Client Selected';}
+  renderClients();
+}
+
+function renderClients(){
+  const g=document.getElementById('client-grid');
+  document.getElementById('client-count-tag').textContent=clients.length+' client'+(clients.length!==1?'s':'');
+  if(!clients.length){g.innerHTML='<div class="empty-state">No clients yet</div>';return;}
+  g.innerHTML=clients.map(c=>`<div class="client-card ${activeClient&&activeClient.id===c.id?'active-c':''}"><div class="client-name">${c.name}</div><div class="client-meta">${c.industry}<br>${c.platform} · ${c.location||'Global'}<br>${c.icp?(c.icp.slice(0,50)+(c.icp.length>50?'…':'')):''}</div><div class="client-voice">${c.voice}</div><div style="display:flex;gap:5px;margin-top:10px;"><button class="btn bv bsm" onclick="selectClient(${c.id})">✦ Activate</button><button class="btn bgh bsm" onclick="editClient(${c.id})">✏️</button><button class="btn bsm" style="background:rgba(239,68,68,.1);color:var(--rd);border:1px solid rgba(239,68,68,.2);" onclick="deleteClient(${c.id})">🗑</button></div></div>`).join('');
+}
+
+function editClient(id){
+  const c=clients.find(x=>x.id===id);
+  document.getElementById('cl-name').value=c.name;
+  document.getElementById('cl-industry').value=c.industry;
+  document.getElementById('cl-icp').value=c.icp||'';
+  document.getElementById('cl-location').value=c.location||'';
+  document.getElementById('cl-platform').value=c.platform;
+  document.getElementById('cl-vg').value=c.voice;
+  document.getElementById('cl-custom-voice').value=c.customVoice||'';
+  document.getElementById('cl-notes').value=c.notes||'';
+  if(c.customNiche){document.getElementById('cl-custom-niche').value=c.customNiche;document.getElementById('cl-industry').value='Custom Niche ↓';document.getElementById('cl-custom-niche-wrap').style.display='flex';}
+  document.getElementById('tab-clients').scrollIntoView({behavior:'smooth'});
+}
+
+function clearClientForm(){['cl-name','cl-icp','cl-location','cl-custom-voice','cl-notes','cl-custom-niche'].forEach(id=>document.getElementById(id).value='');document.getElementById('cl-custom-niche-wrap').style.display='none';}
+function closeModal(e){if(e.target.id==='modal')closeModalDirect();}
+function closeModalDirect(){document.getElementById('modal').classList.remove('open');}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>toast('Copied! 📋'));}
+function toast(msg,bg='#10b981'){const t=document.getElementById('toast');t.textContent=msg;t.style.background=bg;t.style.color=bg==='#10b981'?'#000':'#fff';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+function showTab(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+document.getElementById('cal-month').value=new Date().getMonth();
+document.getElementById('cal-year').value=new Date().getFullYear();
+renderCal();renderClients();
+if(activeClient)document.getElementById('active-badge').textContent='👤 '+activeClient.name;
+</script>
+</body>
+</html>
